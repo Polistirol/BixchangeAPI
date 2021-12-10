@@ -144,7 +144,7 @@ def api(request):
 			overview_json = serialize_exchange_info()
 			return JsonResponse(overview_json,safe = False)
 		if action == "traders":
-			test_orders(user1)
+			#test_orders(user1)
 			traders_json = serialize_traders()
 			return JsonResponse(traders_json,safe = False)
 		if action =="BUY" or action == "SELL":
