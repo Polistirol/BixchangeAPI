@@ -3,7 +3,7 @@ from django.http.response import HttpResponse
 from django.shortcuts import  render, redirect
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth import authenticate,login
+from django.contrib.auth import authenticate, login
 from .forms import NewUserForm
 from django.contrib import messages
 from django.utils import timezone

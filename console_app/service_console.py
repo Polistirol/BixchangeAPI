@@ -16,8 +16,10 @@ global url
 global site
 site = Site()
 
-def ping():
+def ping(address=None):
     try:
+        if address:
+            site.url = address
         requests.get(Site.url)
         return True
     except Exception as e:

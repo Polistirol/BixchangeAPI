@@ -3,17 +3,19 @@ import service_console as scs
 from user import User
 import json
 from requests.exceptions import RequestException
+import sys
 
 
 
-def connect():
+def connect(address="http://127.0.0.1:8000/console"):
     i.msg.info("Connecting to the servr...")
-    isConnected= scs.ping()
+    isConnected= scs.ping(address)
     if not isConnected:
         i.msg.error("Connection Failed. \nImpossible to reach the Server")
         _quit()
     else:
         i.msg.ok("Connected to the server !")
+        i.msg.ok(f"---> {address}")
         return
 
 def _quit():
@@ -148,7 +150,11 @@ def homeMenu(user,r=None):
 
 try:
     i.msg.init() 
-    connect()
+    
+    if len(sys.argv) ==2: 
+        connect(sys.argv[1])
+    else:
+        connect()
     i.welcome()
     user = login()
     if user:
@@ -156,4 +162,3 @@ try:
 except RequestException as e:  
     i.msg.error("Connection Lost !\n Check your connection or try again later !")
     _quit()
-
