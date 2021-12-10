@@ -7,17 +7,17 @@ Test Version 0.1
 ## The Exchange
 BixChange is a Bitcoin exchange API/website, built with Python 3.8, Django and MongoDB and a series of complementary libraries\
 It allows registered users to trade Bitcoin and retrive general informations about the stat of the exchange
-### Users
+###New Users
 To every new user a random amount of BTC (ranging from 1 to 10..so pretty big money here) is sent\
 ***When registering, use a valid referral code for extra 5 BTC to you and your referred friend!***
 
 ## API 
 The main web page offers quick ways to retrive data from the platform, this data is serialized into JSON format.\
-###Your Balance
+### Your Balance
 Explore in details your wallet Balance and all your Orders details.
-###Exchange Overview
+### Exchange Overview
 Have an overview of this exchange: daily Volume, active Orders and more
-###Traders
+### Traders
 See how fellow traders are going
 ## Trading
 User can issue various types of Buy and Sell orders:
