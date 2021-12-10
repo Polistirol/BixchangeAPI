@@ -4,7 +4,7 @@
 
 Test Version 0.1
 
-## The Exchange
+# The Exchange
 BixChange is a Bitcoin exchange API/website, built with Python 3.8, Django and MongoDB and a series of complementary libraries\
 It allows registered users to trade Bitcoin and retrive general informations about the stat of the exchange
 ###New Users
