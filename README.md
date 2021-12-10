@@ -5,7 +5,7 @@ Bitcoin web Exchange + console App
 Test Version 0.1
 
 
-Console app usage:
+Console app usage: \n
 Download the folder Console-App from this repo
 from terminal run:
 ```
