@@ -38,8 +38,9 @@ def serialize_orders(orders):
         singleOrderData = {
             "Date": order.datetime,
             "Order Type":  ORDER_TYPE_CHOICHES[order.type-1][1],
-            "Amount": order.amount,
-            "USD Price" : order.USDprice,
+            "Opening Amount" : order.openingAmount,
+            "Amount Left": order.amount,
+            "USD Price" : order.USDprice if order.USDprice != 0 else "Market Price",
             "Order Status": ORDER_STATUS_CHOICHES[order.status-1][1],
             "History": order.history}
         singleOrder = {str(order.id): singleOrderData}

@@ -23,15 +23,18 @@ class Profile(models.Model):
     def lock(self,order=None ,mode=1,usdToLock=0, btcToLock =0, ):
         '''Lock/Unlock assets from an order, or given as argument.
         The Mode parameter set if is locking( mode = 1) or unlocking (mode =-1) '''
+        verb = "LOCKED" if mode == 1 else "UNLOCKED"
         if order:
             if order.type in [3,5]: #buy order, so lock max usd 
                 usdToLock = order.amount*order.USDprice*mode
                 self.lockedUSD+=  usdToLock
                 self.usd -= usdToLock
+                #order.updateHistory(f"{verb} {usdToLock}$" )
             elif order.type in [4,6]: #sell order, so lock max btc 
-                btcToLock = order.amount
+                btcToLock = order.amount*mode
                 self.lockedBTC+=btcToLock
                 self.btc -= btcToLock
+                #order.updateHistory(f"{verb} {btcToLock}BTC" )
         else:
             self.lockedUSD+= usdToLock*mode
             self.lockedBTC+=btcToLock*mode
@@ -49,7 +52,8 @@ def create_user_profile(sender, instance, created, **kwargs):
         Profile.objects.create(user=instance)
         while True:
             newRefCode=''.join(random.choice(string.ascii_letters + string.digits) for i in range(5))
-            if Profile.objects.get(ownReferral=newRefCode):
+            isUsed = Profile.objects.filter(ownReferral=newRefCode).first()
+            if isUsed:
                 print("ref used, regenearatring")
             else:
                 break
@@ -68,12 +72,19 @@ class Order(models.Model):
     type= models.IntegerField(choices=ORDER_TYPE_CHOICHES,default=1)
     USDprice = models.FloatField(default=0)
     amount = models.FloatField( default=0)
+    openingAmount = models.FloatField( default=0)
     status  = models.IntegerField(choices=ORDER_STATUS_CHOICHES,default=1)
     history = models.JSONField(default= dict)
 
-    def updateHistory(self,event,info=""):
-        now = str(datetime.datetime.now())
-        self.history[now]=[event,info]
+    def updateHistory(self,*args ):
+        now = str(datetime.datetime.now().strftime("%m/%d/%Y %H:%M:%S"))
+        if now in self.history.keys():
+            for arg in args:
+                self.history[now].append(arg)
+        else: 
+            self.history[now] = []
+            for arg in args:
+                self.history[now].append(arg)
         self.save()
       
 

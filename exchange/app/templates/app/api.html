@@ -172,11 +172,20 @@ input::-webkit-inner-spin-button {-webkit-appearance: none;margin: 0;}
 </style>
 
 <div   class="grid-container">
-<div class="grid-item">
-  <a style="color: #c93939; padding-left: 20px; font-size: large; " > <b></b>{{user}} </a></div>
+<div class="grid-item" style="grid-column: 1 / span 2"><a style="color: #c93939;; font-size: x-large; " > <b></b>{{user}} </a></div>
+
 <div class="grid-item"><a style="color: rgb(216, 202, 1);">{{profile.btc}} BTC</a></div>
-<div class="grid-item"><a href="../accounts/logout" style="color: #c93939;"> logout</a></div>
 <div class="grid-item"> <a style="color: rgb(2, 184, 53)">{{profile.usd}}$</a></div>
+<!--
+<div class="grid-item" style="grid-column: 1 / span 2">Locked</div>
+<div class="grid-item"><a style="color: rgb(216, 202, 1);">{{profile.lockedBTC}} BTC</a></div>
+<div class="grid-item"> <a style="color: rgb(2, 184, 53)">{{profile.lockedUSD}} $</a></div>
+-->
+<div class="grid-item"><a style="color:  rgb(2, 184, 53);">Profit:</a></div>
+<div class="grid-item"> <a style="color: rgb(2, 184, 53)">{{profile.profit}} $</a></div>
+
+<div class="grid-item" style="grid-column: 1 / span 2"><a href="../accounts/logout" style="color: #c93939;"> logout</a></div>
+
 </div>
 
 

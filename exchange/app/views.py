@@ -31,14 +31,10 @@ def register_request(request):
 	form = NewUserForm()
 	return render (request=request, template_name="app/register.html", context={"register_form":form})
 
-	
-
 @csrf_exempt
 def console(request):
-
 	if request.method =="POST" :
 		action = request.POST.get("action",None)
-
 		if action=="login":
 			userID = console_login(request)
 			if userID:
@@ -76,9 +72,9 @@ def console(request):
 					orderId = request.POST.get("order_id",None)
 					orderToCancel = Order.objects.all().get(id=orderId)
 					if orderToCancel:
-						isSucess,log = svc.cancel_order(orderToCancel)
+						isSucess= svc.cancel_order(orderToCancel)
 						if isSucess: 
-							return JsonResponse({"action": "cancel","success":True,"log":log.content},safe = False)
+							return JsonResponse({"action": "cancel","success":True,"log":f"Order {orderId} was successfully Canceled!"},safe = False)
 						else:
 							return JsonResponse({"action": "cancel","success":False,"log":"There was a problem canceling your order !"},safe = False)	
 					else:
@@ -86,18 +82,16 @@ def console(request):
 						return JsonResponse({"action": "cancel","succes":False,"log":"Order not found"},safe = False)
 
 				elif action =="new_order":
-					log = Log()
 					userID = request.POST.get("user_id",None)
 					profile = User.objects.get(id=userID).profile
 					orderType = int(request.POST.get("type",None))
 					amount = float(request.POST.get("amount",None))
 					USDprice = float(request.POST.get("USDprice",None))
-					newOrder,log= svc.place_order(profile,orderType,amount,USDprice)
+					newOrder= svc.place_order(profile,orderType,amount,USDprice)
 					if newOrder:
-						checkLog= svc.check_for_orders_match(newOrder)
-						log.add(checkLog)
-						print(log.content)
-					return JsonResponse({"action":"new_order","log":log.content,},safe = False)
+						svc.check_for_orders_match(newOrder)
+						log = serialize_orders([newOrder])
+					return JsonResponse({"action":"new_order","log":log},safe = False)
 
 				elif action == "get_btc_price":
 					price = Bank.objects.get(currency="bitcoin").globalMarketPrice
@@ -111,7 +105,6 @@ def console_login(request):
 	password =  request.POST.get("pw",None)
 	user = authenticate(username=username, password=password)
 	login(request,user)
-	print("ddd" ,request.user.is_authenticated)
 	print(request.user)
 	if user :
 		print(f"User {user.username} with ID: {user.id} logged from console" )
@@ -121,8 +114,6 @@ def console_login(request):
 		print("no user")
 		return False
     # No backend authenticated the credentials
-		
-
 
 
 def api(request):
@@ -130,6 +121,7 @@ def api(request):
 		return redirect("/accounts/login")
 
 	user1 = User.objects.filter(username="loi").first().profile
+	user2 = User.objects.filter(username="test").first().profile
 	price = Bank.objects.get(currency="bitcoin").globalMarketPrice
 	user = request.user
 	#Order.objects.all().delete()
@@ -144,7 +136,7 @@ def api(request):
 			overview_json = serialize_exchange_info()
 			return JsonResponse(overview_json,safe = False)
 		if action == "traders":
-			#test_orders(user1)
+			test_orders(user2)
 			traders_json = serialize_traders()
 			return JsonResponse(traders_json,safe = False)
 		if action =="BUY" or action == "SELL":
@@ -153,11 +145,10 @@ def api(request):
 			amount = float(request.POST.get("amount",None))
 			USDprice = float(request.POST.get("USDprice",None))
 			print(request.POST)
-			newOrder,log = svc.place_order(user.profile,orderType,amount,USDprice)
-			checkLog = svc.check_for_orders_match(newOrder)
-			log.append(checkLog)	
-			print(log.content)
-			return order_id(request=request,id = newOrder.id,log = log.content)
+			newOrder = svc.place_order(user.profile,orderType,amount,USDprice)
+			if newOrder :
+				svc.check_for_orders_match(newOrder)
+			return order_id(request=request,id = newOrder.id,log = newOrder.history)
 
 	return render (request=request, template_name="app/api.html",context= {"esito":None,"globalPrice":price,"profile":user.profile})
 

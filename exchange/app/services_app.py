@@ -14,6 +14,7 @@ def assign_rnd_btc(user,MIN=1,MAX=10):
     rnd = float(random.randint(MIN,MAX))
     user.profile.btc+= rnd
     user.save()
+    print(f"New User {user} received {rnd} BTC upon registration")
     return 
     
 def validate_referral(registeringUser,rewardAmount = 5):
@@ -37,32 +38,34 @@ def send_referral_btc(sender,receiver,amount):
 
 
 def place_order(placer,orderType, amount, USDprice):
-    log = models.Log()
     if not is_order_type_valid(orderType):
-        log.add(msg.error(f"Invalid order type ({orderType}). Order Canceled"))
-        return log
+        return msg.error(f"Invalid order type ({orderType}). Order Canceled")
+
     USDprice = 0  if orderType in [1,2] else USDprice #if market order, price =0 because will be set buy market offers
     #check balances
     if orderType in [1,3,5] and placer.usd < amount*USDprice: #cant buy
-        log.add(msg.error(f"You dont have sufficent funds to cover your order at the moment\nOrder for {amount*USDprice}$ and {placer.usd}$ available"))
-        newOrder = models.Order(placer=placer, type= orderType,USDprice = USDprice,amount=amount,status = 3)
+        newOrder = models.Order(placer=placer, type= orderType,USDprice = USDprice,amount=amount,openingAmount=amount,status = 3)
         newOrder.save()
-        return newOrder, log
-    if orderType in [2,4,6] and placer.btc < amount: #sell
-        newOrder = models.Order(placer=placer, type= orderType,USDprice = USDprice,amount=amount,status = 3)
-        newOrder.save()
-        log.add(msg.error(f"You dont have sufficent funds to cover your order at the moment\nOrder for {amount}BTC and {placer.btc} available"))
-        return newOrder,log
+        newOrder.updateHistory( msg.error(f"You dont have sufficent funds to cover your order at the moment: Order for {amount*USDprice}$ and {placer.usd}$ available"))
+        return newOrder
 
-    newOrder = models.Order(placer=placer, type= orderType,USDprice = USDprice,amount=amount)
+    if orderType in [2,4,6] and placer.btc < amount: #sell
+        newOrder = models.Order(placer=placer, type= orderType,USDprice = USDprice,amount=amount,openingAmount=amount,status = 3)
+        newOrder.save()
+        newOrder.updateHistory(msg.error(f"You dont have sufficent funds to cover your order at the moment: Order for {amount}BTC and {placer.btc} available"))
+        return newOrder
+
+    newOrder = models.Order(placer=placer, type= orderType,USDprice = USDprice,amount=amount,openingAmount=amount)
     newOrder.save()
     usd,btc =placer.lock(newOrder)
-    info = f"USD locked: {usd} , BTC locked: {btc}" if orderType not in [1,2] else  ""
-    log.add(msg.info(info))
-    newOrder.updateHistory("OPENED",info)
-    log.add(msg.info(f"New {ORDER_TYPE_CHOICHES[orderType-1][1] } Order by: {placer.user.username} of {amount} btc at {USDprice}$ each has been placed with ID: {newOrder.id}!"))
+    lockInfo = f"USD locked: {usd} , BTC locked: {btc}" if orderType not in [1,2] else  "Market order, nothing is locked"
+    if newOrder.type in [1,2]:
+        newInfo = msg.info(f"New {ORDER_TYPE_CHOICHES[orderType-1][1] } Order by: {placer.user.username} of {amount} btc at Market Price has been placed with ID: {newOrder.id}!")
+    else:
+        newInfo = msg.info(f"New {ORDER_TYPE_CHOICHES[orderType-1][1] } Order by: {placer.user.username} of {amount} btc at {USDprice}$ each has been placed with ID: {newOrder.id}!")
+    newOrder.updateHistory("OPENED",newInfo,lockInfo)
     #check_for_orders_match(new_order)
-    return newOrder,log
+    return newOrder
 
 def check_for_orders_match(newOrder):
     '''Here is managed the logic behind the orders
@@ -71,10 +74,9 @@ def check_for_orders_match(newOrder):
     limit_fast , the order is fulfilled, also partially , if a matching order at the correct price is available.
     the orders have differnt priority, the limit_full having the highest, followed by limit_fast and market'''
 
-    log = models.Log()
     if newOrder.status != 1 :
-        log.add(msg.nrm("Order not sent to market"))
-        return log
+        newOrder.updateHistory(msg.nrm("Order not sent to market"))
+        return newOrder
 
     orderType= newOrder.type
     amountToCover = newOrder.amount
@@ -91,18 +93,19 @@ def check_for_orders_match(newOrder):
         if orderType == 1: #1) market buy 
             marketBuyPool,usdNeeded =market_order_pool(newOrder,openOrders)
             if not marketBuyPool :
-                log.add(msg.err_liquidity()) #no liquidity
-                log.add(close_orders(3,newOrder)) #order fails
-                return log
+                newOrder.updateHistory(msg.err_liquidity()) #no liquidity
+                close_orders(3,newOrder)
+                return newOrder
             else: #liquidity ok                       
                 if usdNeeded > newOrder.placer.usd: #buyer has not enough usd to close the order 
-                    log.add(msg.error(f"Insufficent funds to complete the order : {usdNeeded}$ needed and {newOrder.placer.usd}$ available"))
-                    log.add(close_orders(3,newOrder)) #order fails
-                    return log
+                    newOrder.updateHistory(msg.error(f"Insufficent funds to complete the order : {usdNeeded}$ needed and {newOrder.placer.usd}$ available"))
+                    close_orders(3,newOrder) #order fails
+                    return newOrder
                 else:
-                    log.add(msg.nrm(f"Funds sufficient : {usdNeeded}$ needed and {newOrder.placer.usd}$ available"))
-                    log .add(unpack_market_pool(newOrder,marketBuyPool))
-                    return log
+                    newOrder.updateHistory(msg.nrm(f"Funds sufficient : {usdNeeded}$ needed and {newOrder.placer.usd}$ available"))
+                    unpack_market_pool(newOrder,marketBuyPool)
+                    newOrder.updateHistory(msg.ok(f"Order completed! bought {newOrder.openingAmount}btc for {usdNeeded}$ !"))
+                    return newOrder
 
         elif orderType == 3: #3 = limit fast buy
             openOrders= openOrders.filter(USDprice__lte = newOrder.USDprice).order_by("USDprice","-type","datetime")
@@ -110,30 +113,34 @@ def check_for_orders_match(newOrder):
                 if newOrder.status == 1: #if order is still open, keep fulfilling it it
                     if order.type == 6: #full sell
                         if order.amount <= amountToCover: 
-                            log.add(fulfill_order(newOrder,order))
+                            fulfill_order(newOrder,order)
                             continue
                         else: continue
                     elif order.type == 4: # sell order is fast
-                            log.add(fulfill_order(newOrder,order))
+                            fulfill_order(newOrder,order)
                             continue
-                return log
-            log.add(msg.exchange_uncover(newOrder))
-            return log
+                return 
+            newOrder.updateHistory(msg.exchange_uncover(newOrder))
+            return 
 
         elif orderType == 5: #5 limit buy full
+            #Get all FULL orders
             openOrdersFull= openOrders.filter(USDprice__lte = newOrder.USDprice,amount__lte=newOrder.amount ,type=6).order_by("USDprice","datetime")
-            openOrdersFast = fillup_full_orders(newOrder, openOrders) 
+            #get coverage orders orders
+            coverageOrders = get_coverage_orders(newOrder, openOrders) 
+            #combine the full orders available to get the best deal for the new order
             bestDeal = find_best_deal(newOrder,openOrdersFull)
             if not bestDeal:
-                log.add(msg.exchange_uncover(newOrder))
-                return log
+                newOrder.updateHistory(msg.exchange_uncover(newOrder))
+                return 
             else:
-                bestDeal.orderList += openOrdersFast
+                bestDeal.orderList += coverageOrders
                 for order in bestDeal.orderList:
-                    if newOrder.status ==1: fulfill_order(order,newOrder)
-                    else: return
-            log.add(msg.error(f"Error fulfilling order id: {newOrder.id}"))
-            return log
+                    fulfill_order(order,newOrder)
+                    if newOrder.status != 1: 
+                        return
+            newOrder.updateHistory(msg.error(f"Error fulfilling order id: {newOrder.id}"))
+            return 
     #SELLING         
     elif orderType in [2,4,6]: #selling
         msg.nrm("searching for SELL order match...")
@@ -146,14 +153,14 @@ def check_for_orders_match(newOrder):
         if orderType == 2: #2) market sell 
             marketBuyPool,usdNeeded =market_order_pool(newOrder,openOrders)
             if marketBuyPool:
-                log.add(msg.info(f"Found {len(marketBuyPool)} buy orders for you"))
-                log.add(unpack_market_pool(newOrder,marketBuyPool))
-                log.add(msg.ok(f"Order completed! sold {newOrder.amount}btc for {usdNeeded}$ of profit!"))
-                return log
+                msg.info(f"Found {len(marketBuyPool)} buy orders for you")
+                unpack_market_pool(newOrder,marketBuyPool)
+                newOrder.updateHistory(msg.ok(f"Order completed! sold {newOrder.openingAmount}btc for {usdNeeded}$ of profit!"))
+                return newOrder
             else:
-                log.add(msg.err_liquidity()) #no liquidity
-                log.add(close_orders(3,newOrder)) #order fails   
-                return log             
+                newOrder.updateHistory(msg.err_liquidity()) #no liquidity
+                close_orders(3,newOrder) #order fails   
+                return newOrder             
         
         elif orderType == 4: #4 = limit fast sell
             openOrders= openOrders.filter(USDprice__gte = newOrder.USDprice).order_by("-USDprice","-type","datetime")
@@ -162,30 +169,31 @@ def check_for_orders_match(newOrder):
                 if newOrder.status == 1: #if order is still open, keep fulfilling it it
                     if order.type == 5: #full buy
                         if order.amount <= amountToCover and order.placer.usd >= order.amount*avgPrice: #buy order can be closed
-                            log.add(fulfill_order(order,newOrder))
+                            fulfill_order(order,newOrder)
                             continue
                         else: continue
                     elif order.type == 3: # buy order is fast
-                        log.add(fulfill_order(order,newOrder))
+                        fulfill_order(order,newOrder)
                         continue
-            log.add(msg.exchange_uncover(newOrder))
-            return log 
+            newOrder.updateHistory(msg.exchange_uncover(newOrder))
+            return 
 
         elif orderType == 6: #6 limit buy full
             openOrdersFull= openOrders.filter(USDprice__gte = newOrder.USDprice,amount__lte=newOrder.amount ,type=5).order_by("-USDprice","datetime")
-            openOrdersFast = fillup_full_orders(newOrder, openOrders) 
+            coverageOrders = get_coverage_orders(newOrder, openOrders) 
             print("Backup Orders : ",len(openOrdersFast))
             bestDeal = find_best_deal(newOrder,openOrdersFull)
             if not bestDeal:
-                log.add(msg.exchange_uncover(newOrder))
-                return log 
+                newOrder.updateHistory(msg.exchange_uncover(newOrder))
+                return 
             else:
                 bestDeal.orderList += openOrdersFast
                 for order in bestDeal.orderList:
-                    if newOrder.status ==1: log.add(fulfill_order(order,newOrder))
-                    else: return log
-            log.add(msg.error(f"Error fulfilling order id: {newOrder.id}"))
-            return log
+                    fulfill_order(order,newOrder)
+                    if newOrder.status != 1: 
+                        return 
+            newOrder.updateHistory(msg.error(f"Error fulfilling order id: {newOrder.id}"))
+            return 
 
 
 def fulfill_order(A_order,B_order):
@@ -193,10 +201,9 @@ def fulfill_order(A_order,B_order):
     Checks wether an order is to be closed (because fulfilled) or to be kept open (updated).
     creates the necessary transactions as well
     '''
-    log=models.Log()
     if (A_order.type in [1,3,5] and B_order.type in [1,3,5]) or (A_order.type in [2,4,6] and B_order.type in [2,4,6]): #orders are of same kind. throw error
-        log.add(msg.error(f"order id {A_order.id} is type {A_order.type }and order id  {B_order.id} is type {B_order.type}"))
-        return log
+        msg.error(f"order id {A_order.id} is type {A_order.type }and order id  {B_order.id} is type {B_order.type}")
+        return 
     
     buyOrder = A_order if A_order.type in [1,3,5] else B_order
     sellOrder = A_order if A_order.type in [2,4,6] else B_order
@@ -217,11 +224,12 @@ def fulfill_order(A_order,B_order):
     if buyOrder.type != 1:
         lockedUsdForOrder = buyOrder.amount*buyOrder.USDprice
         usdToUnlock = lockedUsdForOrder- orderToClose.amount*avgPrice
-        buyer.lock(mode=-1,usdToLock = usdToUnlock ) #unlock usd
-        log.add(msg.nrm(f"Exchange saved you {usdToUnlock} !$"))
+        buyer.lock(buyOrder,mode=-1,usdToLock = usdToUnlock ) #unlock usd
+        saved=msg.nrm(f"Exchange saved you {usdToUnlock} !$")
+        if usdToUnlock>0 : buyOrder.updateHistory(saved)
     if sellOrder.type != 2:
         #unlock btc
-        seller.lock(mode= 1 ,btcToLock= orderToClose.amount) 
+        seller.lock(sellOrder, mode= -1 ,btcToLock= orderToClose.amount) 
     else:
         seller.btc -= orderToClose.amount
     buyer.btc += orderToClose.amount
@@ -233,20 +241,20 @@ def fulfill_order(A_order,B_order):
     seller.save()
     buyer.save()
 
-    log.add(new_transaction(seller,buyer,1,avgPrice,orderToClose.amount))
-    if usdToUnlock : log.add(msg.nrm(f"Exchange saved you {usdToUnlock} !$"))
-    
-    log.add(close_orders(2,orderToClose))
-
+    txLog = new_transaction(seller,buyer,1,avgPrice,orderToClose.amount)
+    buyOrder.updateHistory(txLog)
+    sellOrder.updateHistory(txLog)
+    #if usdToUnlock : log.add(msg.nrm(f"Exchange saved you {usdToUnlock} !$"))
+    close_orders(2,orderToClose)
     if amountLeft == 0 : #also the other order is to be closed
-       log.add(close_orders(2,orderToUpdate))
+       close_orders(2,orderToUpdate)
     else:
-        log.add(update_order(orderToUpdate,amountLeft))
-    return log
+        update_order(orderToUpdate,amountLeft)
+    return
  
-def fillup_full_orders(newOrder,openOrders):
-    '''Takes the orders of type FAST from the pool. Use the order to try to cover the full order.
-    If there are not enough full order, Fast orders are used  '''
+def get_coverage_orders(newOrder,openOrders):
+    '''Coverage orders are orders of type LIMIT_FAST that are used as a backup, 
+    in case there is no liquidity amoung the FULL orders to fulfill a new FULL order.'''
     if newOrder.type == 6:
         openOrders = openOrders.filter(USDprice__gte = newOrder.USDprice,type=3).order_by("-USDprice","amount","datetime")
     elif newOrder.type == 5:
@@ -258,51 +266,47 @@ def fillup_full_orders(newOrder,openOrders):
         ids.add(order.id)
         if amountNeeded <= 0:
             break
-    openOrders = openOrders.filter(id__in=ids)
-    return openOrders
+    coverageOrders = openOrders.filter(id__in=ids)
+    return coverageOrders
 
 def update_order(orderToUpdate,newAmount):
-    log=models.Log()
-    log.add(msg.upt_ord_amt(orderToUpdate,newAmount))
-    info=f"AMT {orderToUpdate.amount}->{newAmount}"
+    msg.upt_ord_amt(orderToUpdate,newAmount)
+    info=f"UPDATE : AMOUNT {orderToUpdate.amount}->{newAmount}"
     orderToUpdate.amount = newAmount
-    orderToUpdate.updateHistory("UPDATE",info)
+    orderToUpdate.updateHistory(info)
     orderToUpdate.save()
-    return log
+    return 
 
 def close_orders(status,*orders): #takes
-    log = models.Log()
     for order in orders:
         order.status = status
+        order.amount = 0
         order.save()
         str_status = ORDER_STATUS_CHOICHES[status-1][1]
-        order.updateHistory("CLOSED")
-        log.add(msg.wrn(f"Order with id: {order.id} of type: {ORDER_TYPE_CHOICHES[order.type-1][1]} is now {str_status}"))
-    return log
+        infoMsg = msg.wrn(f"Order with id: {order.id} of type: {ORDER_TYPE_CHOICHES[order.type-1][1]} is now {str_status}")
+        order.updateHistory(infoMsg,"--END--")
+    return 
         
 
 def cancel_order(order):
-    log=models.Log()
     usd,btc=order.placer.lock(order=order,mode=-1)
     order.status=4
     order.save()
-    info = f"{usd} USD - {btc} BTC Unlocked and returned to owner"
-    log.add(msg.wrn(f"Order with id: {order.id} of type: {ORDER_TYPE_CHOICHES[order.type-1][1]} is now Canceled"))
-    log.add(msg.wrn(info))
-    order.updateHistory("CANCELLED",info)
-    return True,log
+    unlockedMsg = f"{usd} USD - {btc} BTC Unlocked and returned to owner"
+    cancelledMsg =msg.wrn(f"Order with id: {order.id} of type: {ORDER_TYPE_CHOICHES[order.type-1][1]} was Canceled by the User")
+    order.updateHistory(unlockedMsg,cancelledMsg,"--END--")
+    return True
 
 # TRANSACTION
 def new_transaction(sender,receiver,txType,USDprice,amount):
-    log=models.Log()
     if txType == 99:
-        new_transaction_referral(sender,receiver,amount)
-        return
+        txLog = new_transaction_referral(sender,receiver,amount)
+        return txLog
     new_transaction = models.Transaction(sender=sender,receiver = receiver, type= txType,USDprice = USDprice,amount=amount)
     new_transaction.totalUSD(amount,USDprice)
     new_transaction.save()
-    log .add(msg.ok(f"New Transaction from:{sender.user.username} to {receiver.user.username} of {amount} btc at {USDprice}$ -> tot: {USDprice*amount}$ is Confirmed !"))
-    return log
+    txLog = msg.ok(f"TRANSACTION : New Transaction from:{sender.user.username} to {receiver.user.username} of {amount} btc at {USDprice}$ -> tot: {USDprice*amount}$ is Confirmed !")
+    return txLog
 
 def new_transaction_referral(sender,receiver,amount):   #if referral
     USDprice =0
@@ -315,6 +319,6 @@ def new_transaction_referral(sender,receiver,amount):   #if referral
     sender.save()
     new_transaction = models.Transaction(sender=sender,receiver = receiver, type= 99,USDprice = USDprice,amount=amount)
     new_transaction.save()
-    msg.ok(f"Valid Referral Code: {sender.user.username} \nUser : {receiver.user.username} will receive {amount} BTC and be vey happy")
-    return
+    txLog = msg.ok(f"Valid Referral Code: {sender.user.username} \nUser : {receiver.user.username} will receive {amount} BTC and be vey happy")
+    return txLog
 

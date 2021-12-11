@@ -53,7 +53,7 @@ class msg:
     def exchange_uncover(order):
         a= msg.wrn(f"The Exchange can't entirely fulfill this order at the moment..")
         b = msg.info(f"But the order is now live in the market. Order ID :{order.id} ")
-        return a+"\n"+b
+        return [a,b]
 
     def err_liquidity():
         return msg.error(f"Insufficent exchange liquidity to satisfy this order  ")
@@ -62,7 +62,7 @@ class msg:
         return bcolors.BOLD+text+bcolors.ENDC
 
     def upt_ord_amt(orderToUpdate,newAmount):
-        return msg.info(f"Order id: {orderToUpdate.id} has been updated:AMOUNT: from {orderToUpdate.amount}btc to -> {newAmount}btc at {orderToUpdate.USDprice}$")
+        return msg.info(f"Order id: {orderToUpdate.id} has been updated:AMOUNT: from {orderToUpdate.amount}btc to -> {newAmount}btc")
          
 
     def upt_ord_usd(orderToUpdate,newAmount):

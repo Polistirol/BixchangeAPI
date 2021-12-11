@@ -102,7 +102,7 @@ def welcome():
 
 
 def pp(content):
-    pprint.pprint(content,sort_dicts=False)
+    pprint.pprint(content,sort_dicts=False,width=160)
 
 def print_user_balance(userInfoDict):
     msg.wrn(f"___{userInfoDict['username']}___")
@@ -223,7 +223,8 @@ def display_single_order(order):
         msg.bold(f"Order ID : {ID}")
         msg.nrm(f"Made the:  {data['Date']}")
         msg.info2(f"Type: {data['Order Type'] }")
-        msg.wrn(f"BTC amount: {data['Amount']}")
+        msg.wrn(f"BTC opening amount: {data['Opening Amount']}")
+        msg.wrn(f"BTC amount left: {data['Amount Left']}")
         msg.ok(f"At {data['USD Price']}$ ")
         status = data['Order Status']
         if status == "Open":

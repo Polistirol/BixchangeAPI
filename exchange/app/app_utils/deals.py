@@ -85,8 +85,9 @@ def find_best_deal(newOrder ,ordersFull : list,maxLenOrder:int = 50) -> list:
     ''' Returns the list of orders with the best deal for the order maker.'''
     targetAmount = newOrder.amount
     askedPrice = newOrder.USDprice
-    orderType = "sell" if newOrder.type in [2,4,6] else "buy"
+    orderType = "sell" if newOrder.type == 6 else "buy"
     if ordersFull:
+        #get the top maxLenOrder full orders
         ordersFull = ordersFull if len(ordersFull) < maxLenOrder else ordersFull[:maxLenOrder] #this filter is temporay, is used to prevent performance issue
         generator = subset_sum_orders(ordersFull,targetAmount)
         bestDeal = get_best_deal(generator,orderType)

@@ -45,24 +45,7 @@ As well as the total amount of usd necessary to cover them all.
 def unpack_market_pool(newOrder,pool):
     '''takes a list of orders (market pool) and resolves all the matching. 
         If the case, will place a new order.'''
-    amountToCover=newOrder.amount
-    log = models.Log()
     for order in pool:
-        # sender = order.placer if newOrder.type in [1,3,5] else newOrder.placer
-        # receiver = order.placer if newOrder.type in [2,4,6] else newOrder.placer
-        # if order.amount < amountToCover:
-        #     log.add(svc.new_transaction(sender,receiver,txType= 1, USDprice = order.USDprice,amount = order.amount) ) 
-        #     amountToCover -= order.amount
-        #     log.add ( svc.close_orders(2,order) )
-        # elif order.amount == amountToCover:
-        #     log.add (svc.new_transaction(sender,receiver,txType= 1,USDprice = order.USDprice, amount = order.amount))
-        #     log.add(svc.close_orders(2,order,newOrder))
-        #     log.add(msg.wrn("market order closed !"))
-        # else:
-        #     log.add(svc.new_transaction(sender,receiver,txType= 1,USDprice = order.USDprice, amount = amountToCover))
-        #     log.add(svc.close_orders(2,newOrder))
-        #     newAmount = order.amount - amountToCover
-        #     svc.update_order(order,newAmount)
         svc.fulfill_order(newOrder,order)
-    return log
+    return
 
