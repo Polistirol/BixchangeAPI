@@ -1,2 +1,5 @@
 .vscode
 console_app\__pycache__
+exchange\app\__pycache__
+exchange\.vs
+exchange\job\__pycache__
