@@ -15,7 +15,7 @@ import random
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    usd = models.FloatField(default=0)
+    usd = models.FloatField(default=100)
     btc = models.FloatField(default=0)
     lockedUSD = models.FloatField(default=0)
     lockedBTC = models.FloatField(default=0)

@@ -139,10 +139,21 @@ def exchangeOverview(request):
     return JsonResponse(overview_json, safe=False)
 
 
+def tradersOverview(request):
+    if not request.user.is_authenticated:
+        return redirect("/accounts/login")
+    # spam orders for test
+    # user2 = User.objects.filter(username="BankTestMM").first().profile
+    # test_orders(user2)
+
+    traders_json = serialize_traders()
+    return JsonResponse(traders_json, safe=False)
+
+
 def api(request):
     if not request.user.is_authenticated:
         return redirect("/accounts/login")
-    user2 = User.objects.filter(username="test").first().profile
+    user2 = User.objects.filter(username="BankTestMM").first().profile
     price = Bank.objects.get(currency="bitcoin").globalMarketPrice
     user = request.user
     # Order.objects.all().delete()
@@ -150,16 +161,16 @@ def api(request):
     # resetOrders()
     if request.method == "POST":
         action = request.POST.get("action", None)
-        if action == "balance":
-            profile_json = serialize_balance(user)
-            return JsonResponse(profile_json, safe=False)
-        if action == "overview":
-            overview_json = serialize_exchange_info()
-            return JsonResponse(overview_json, safe=False)
-        if action == "traders":
-            test_orders(user2)
-            traders_json = serialize_traders()
-            return JsonResponse(traders_json, safe=False)
+        # if action == "balance":
+        #     profile_json = serialize_balance(user)
+        #     return JsonResponse(profile_json, safe=False)
+        # if action == "overview":
+        #     overview_json = serialize_exchange_info()
+        #     return JsonResponse(overview_json, safe=False)
+        # if action == "traders":
+        #     test_orders(user2)
+        #     traders_json = serialize_traders()
+        #     return JsonResponse(traders_json, safe=False)
         if action == "BUY" or action == "SELL":
             orderType = int(request.POST.get("field", None))
             if action == "SELL":
@@ -199,27 +210,48 @@ def test_orders(user):
     # (5,("Buy_Limit_full")),
     # (6,("Sell_limit_full"))
     Order.objects.all().delete()
-    # newOrder = svc.place_order(user,4,3,5)
-    # newOrder = svc.place_order(user,4,2,6)
-    # newOrder = svc.place_order(user,4,6,6)
-    # newOrder = svc.place_order(user,4,7,6)
-    # newOrder = svc.place_order(user,4,10,7)
+    newOrder = svc.place_order(user, 4, 3, 5)
+    newOrder = svc.place_order(user, 4, 2, 6)
+    newOrder = svc.place_order(user, 4, 6, 10)
+    newOrder = svc.place_order(user, 4, 7, 6)
+    newOrder = svc.place_order(user, 4, 10, 7)
+    newOrder = svc.place_order(user, 4, 9, 8)
+    newOrder = svc.place_order(user, 4, 7, 7)
+    newOrder = svc.place_order(user, 4, 10, 9)
 
-    # newOrder = svc.place_order(user,6,4,3)
-    # newOrder = svc.place_order(user,6,5,5)
-    # newOrder = svc.place_order(user,6,10,5)
-    # newOrder = svc.place_order(user,6,1,6)
+    newOrder = svc.place_order(user, 6, 4, 5)
+    newOrder = svc.place_order(user, 6, 5, 5)
+    newOrder = svc.place_order(user, 6, 10, 7)
+    newOrder = svc.place_order(user, 6, 1, 6)
+    newOrder = svc.place_order(user, 6, 2, 6)
+    newOrder = svc.place_order(user, 6, 5, 9)
+    newOrder = svc.place_order(user, 6, 9, 11)
+    newOrder = svc.place_order(user, 6, 1, 10)
 
-    # newOrder = svc.place_order(user,3,5,7)
-    # newOrder = svc.place_order(user,3,4,7)
-    # newOrder = svc.place_order(user,3,3,6)
-    # newOrder = svc.place_order(user,3,2,4)
+    newOrder = svc.place_order(user, 3, 5, 7)
+    newOrder = svc.place_order(user, 3, 4, 7)
+    newOrder = svc.place_order(user, 3, 3, 6)
+    newOrder = svc.place_order(user, 3, 2, 4)
+    newOrder = svc.place_order(user, 3, 5, 7)
+    newOrder = svc.place_order(user, 3, 5, 7)
+    newOrder = svc.place_order(user, 3, 3, 6)
+    newOrder = svc.place_order(user, 3, 7, 4)
 
-    # newOrder = svc.place_order(user,5,5,8)
-    # newOrder = svc.place_order(user,5,5,7)
-    # newOrder = svc.place_order(user,5,3,5)
-    # newOrder = svc.place_order(user,5,2,6)
+    newOrder = svc.place_order(user, 5, 5, 8)
+    newOrder = svc.place_order(user, 5, 5, 7)
+    newOrder = svc.place_order(user, 5, 3, 5)
+    newOrder = svc.place_order(user, 5, 2, 6)
+    newOrder = svc.place_order(user, 5, 5, 8)
+    newOrder = svc.place_order(user, 5, 5, 7)
+    newOrder = svc.place_order(user, 5, 3, 5)
+    newOrder = svc.place_order(user, 5, 2, 6)
 
+    newOrder = svc.place_order(user, 3, 5, 6)
+    newOrder = svc.place_order(user, 3, 10, 8)
+    newOrder = svc.place_order(user, 5, 3, 7)
+    newOrder = svc.place_order(user, 3, 5, 6)
+    newOrder = svc.place_order(user, 3, 10, 8)
+    newOrder = svc.place_order(user, 5, 3, 7)
     newOrder = svc.place_order(user, 3, 5, 6)
     newOrder = svc.place_order(user, 3, 10, 8)
     newOrder = svc.place_order(user, 5, 3, 7)
