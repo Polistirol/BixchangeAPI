@@ -27,9 +27,8 @@ def validate_referral(registeringUser, rewardAmount=5):
         if refOwner:
             refOwner = refOwner.profile
             send_referral_btc(sender, refOwner, rewardAmount)
-            message = f"Referral code is valid! you and received 5 BTC !"
-    else:
-        message = msg.error(f"Invalid ref code ! {refcode}")
+            return f"Referral code is valid! you and received 5 BTC !"
+    message = msg.error(f"Invalid ref code ! {refcode}")
     return message
 
 
