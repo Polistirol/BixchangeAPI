@@ -44,6 +44,6 @@ Console app usage:\
 Download the folder `Console-App` from this repo\
 from terminal: navigate inside the downloaded `Console-App` and run:
 ```
-python core.py https://df1d-151-60-30-251.ngrok.io
+python core.py https://d5d8-188-152-123-137.ngrok.io/
 ```
 The console app offers unique interactions with the exchange, such as the possibility to manually close own orders
