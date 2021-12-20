@@ -23,5 +23,7 @@ urlpatterns = [
     path("",views.api,name="api"),
     path('accounts/', include('django.contrib.auth.urls')),
     path("console",views.console,name="console"),
-    path("orders/<int:id>",views.order_id ,name = "single"),
+    path("API/orders/<int:id>",views.order_id ,name = "single"),
+    path("API/balance",views.balance ,name = "balance"),
+    path("API/overview",views.exchangeOverview ,name = "overview"),
 ]

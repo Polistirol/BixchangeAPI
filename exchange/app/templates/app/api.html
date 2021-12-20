@@ -46,19 +46,21 @@
 </div>
 
 <div data-w-id="e4d6ed39-1995-dc66-d3e7-be881d0cedb9" class="container w-container">
-    <form  method='POST'>
+    <!--<form  method='POST'>
       {% csrf_token %}
     <button type="submit"  class="button w-button"  name="action" value ="balance">GET</button>
-    </form>
+    </form>-->
+    <a class="button w-button" href="API/balance">GET</a>
     <div class="text-block-4"><strong>Your Balance </strong></div>
     <div class="text-block">Explore in details your wallet Balance and all your Orders details</div>
   </div>
   
   <div data-w-id="95db297c-ac1c-2196-2b0a-75bcee84654a" class="container w-container">
-    <form  method='POST'>
+    <!--<form  method='POST'>
       {% csrf_token %}
     <button type="submit"  class="button w-button" name="action" value="overview">GET</button>
-    </form>
+    </form>-->
+    <a class="button w-button" href="API/overview">GET</a>
     <div class="text-block-4"><strong>Exchange Overview</strong></div>
     <div class="text-block">Have an overview of this exchange: daily Volume, active Orders and more</div>
   </div>
