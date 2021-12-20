@@ -2,6 +2,7 @@ import os
 import pprint
 from tabulate import tabulate
 import random
+from getpass import getpass
 
 
 class bcolors:
@@ -127,6 +128,7 @@ def print_user_orders_overview(ordersDict):
 
 
 def ask_login_credentials():
+
     while True:
         r = input("Press L to [L]ogin\nPress Q to [Q]uit\n").strip().lower()
         if r == "l":
@@ -136,7 +138,7 @@ def ask_login_credentials():
         msg.error("Invalid choice, try again")
     # asking credentials
     username = input("Enter username: ")
-    pw1 = input("Password: ")
+    pw1 = getpass("Password: ")
     param = {"username": username, "pw": pw1}
     return param
 
@@ -251,7 +253,8 @@ def display_single_order(order):
         msg.info2(f"Type: {data['Order Type'] }")
         msg.wrn(f"BTC opening amount: {data['Opening Amount']}")
         msg.wrn(f"BTC amount left: {data['Amount Left']}")
-        msg.ok(f"At {data['USD Price']}$ ")
+        msg.ok(f"Asked USD for BTC unit {data['Asked USD for BTC unit']}$ ")
+        msg.info(f"USD order Value: {data['USD order value']}$")
         status = data['Order Status']
         if status == "Open":
             msg.ok(f"STATUS : {data['Order Status'] }")
