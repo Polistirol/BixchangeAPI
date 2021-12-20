@@ -95,7 +95,7 @@ def serialize_traders():
     last = serialize_orders([last])
     output = {
         "Active Users": Profile.objects.all().count(),
-        "Top profit": Profile.objects.all().order_by("-profit").first().profit,
+        "Top profit": Profile.objects.all().exclude(user__username="BankTestMM").order_by("-profit").first().profit,
         "Worst Profit": Profile.objects.all().order_by("profit").first().profit,
         "New Orders Today": Order.objects.all().filter(datetime__gte=yesterday).count(),
         "Last": last
