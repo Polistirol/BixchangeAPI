@@ -2,7 +2,7 @@
 ### Bitcoin web Exchange + console App
 
 
-Test Version 0.1
+Test Version LIVE @ https://d5d8-188-152-123-137.ngrok.io/
 
 # The Exchange
 BixChange is a Bitcoin exchange API/website, built with Python 3.8, Django and MongoDB and a series of complementary libraries\
