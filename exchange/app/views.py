@@ -14,6 +14,7 @@ import json
 import datetime
 
 
+@csrf_exempt
 def register_request(request):
     if request.method == "POST":
         form = NewUserForm(request.POST)
@@ -25,10 +26,10 @@ def register_request(request):
             message = svc.validate_referral(user)
             user.save()
             return redirect("/", context={"message": "Registraton successful\n"+message})
-        print("Error registering")
+        print("Error registering", form.errors)
         messages.error(
-            request, "Unsuccessful registration. Invalid information.")
-        return redirect("/", context={"message": "Unsuccessful registration. Invalid information."})
+            request, form.errors)
+        return redirect("/register", context={"message": "Unsuccessful registration. Invalid information."})
 
     form = NewUserForm()
     return render(request=request, template_name="app/register.html", context={"register_form": form})

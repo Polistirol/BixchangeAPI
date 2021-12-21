@@ -95,7 +95,6 @@ def welcome():
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@                &@@                  .@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@'''
 
     randomColor = random.randint(1, 5)
-    print(randomColor)
     if randomColor == 1:
         msg.error(logo)
     elif randomColor == 2:
@@ -108,7 +107,7 @@ def welcome():
         msg.ok(logo)
     elif randomColor == 6:
         msg.nrm(logo)
-    msg.info("WELCOME TO THE CONSOLE APP")
+    msg.info("\nWELCOME TO THE BIXCHANGE CONSOLE APP !")
 
 
 def pp(content):

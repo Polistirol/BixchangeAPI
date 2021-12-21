@@ -47,6 +47,8 @@
 </head>
 
 <body class="body">
+
+
   <div class="container-3 w-container"
     style="display:flex;justify-content: center; background-color: #F3F3F3; border-radius: 12px;">
     <img src="./static/banner_red.jpg" alt="" height="150px" style="padding-left: 100;">
@@ -112,8 +114,9 @@
         <div class="w-layout-grid grid">
           <label for="amount" id="w-node-b5c7935f-0d75-9660-5bf3-bb06ae4c3a17-740f5cf9" class="field-label">How many
             Bitcoins ?&nbsp;</label>
-          <input type="text" class="text-field-2 w-node-_1b9f9992-f89f-5d74-bc7c-8d55dbf691f2-740f5cf9 w-input"
-            maxlength="256" name="amount" data-name="amount" placeholder="BTC" id="amount" required="">
+          <input type="number" step="0.00001" min=0
+            class="text-field-2 w-node-_1b9f9992-f89f-5d74-bc7c-8d55dbf691f2-740f5cf9 w-input" maxlength="6"
+            name="amount" data-name="amount" placeholder="BTC" id="amount" required="">
           <div id="w-node-_03243db0-9a6b-1168-f0ed-caa7c1544af4-740f5cf9" class="text-block-10"><strong>Global BTC price
               : </strong></div>
           <label for="USDprice" id="w-node-_7b5e2296-809a-ea4c-9178-a5027fa44e63-740f5cf9" class="field-label-2">At what

@@ -1,10 +1,11 @@
-     
-{% load crispy_forms_tags %}         
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-<!--Register--> 
+{% load crispy_forms_tags %}
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+  integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+  integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+<!--Register-->
 <style>
-	  .submit_btn{
+  .submit_btn {
     border-radius: 8px;
     color: #F3F3F3;
     background-color: #c93939;
@@ -14,16 +15,25 @@
     margin-top: 10px;
   }
 </style>
-<div style="background-color: #F3F3F3; margin-top: 1%; margin-bottom: 1%; margin-left: 10%; margin-right: 10%; border-radius: 12px;" >
-<div class="container py-5">
-	<h1 style="color: #c93939;">Register</h1>
-	<form method="POST">
-		{% csrf_token %}
-		{{ register_form|crispy }}                    
-		
-		<button class="submit_btn"type="submit">Register</button>
-		<p class="text-center">If you already have an account, <a href="accounts/login" style="color: #c93939;">login</a> instead.</p>
-	</form>
-	
+{% for message in messages %}
+<div class="alert alert-danger">
+  <a class="close" data-dismiss="alert">×</a>
+  {{ message }}
+</div>
+{% endfor %}
+<div
+  style="background-color: #F3F3F3; margin-top: 1%; margin-bottom: 1%; margin-left: 10%; margin-right: 10%; border-radius: 12px;">
+  <div class="container py-5">
+    <h1 style="color: #c93939;">Register</h1>
+    <form method="POST">
+      {% csrf_token %}
+      {{ register_form|crispy }}
 
-</div></div>
+      <button class="submit_btn" type="submit">Register</button>
+      <p class="text-center">If you already have an account, <a href="accounts/login" style="color: #c93939;">login</a>
+        instead.</p>
+    </form>
+
+
+  </div>
+</div>
