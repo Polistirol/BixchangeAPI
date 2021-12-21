@@ -5,10 +5,11 @@
 Test Version LIVE @ https://d5d8-188-152-123-137.ngrok.io/
 \
 BixChange is a Bitcoin exchange API/website, built with:
--Python 3.8
--Django
--MongoDB 
-and a series of complementary libraries, you can check the full list here\
+- [Python 3.9](https://www.python.org/downloads/release/python-391/)
+- [Django Web Framework - v3.2.9](https://www.djangoproject.com/)
+- [MongoDB -Database](https://www.mongodb.com/) 
+- [Djongo -MDB Mapper - v1.3.6](https://www.djongomapper.com/)
+- and a series of complementary libraries, a full list can be checked [here](requirements.txt)\
 \
 # The Exchange
 
