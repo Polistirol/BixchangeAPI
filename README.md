@@ -43,7 +43,7 @@ The market will search for a way to fulfill it enirely, if that is impossible at
 A Limit FULL order will **never be splitted**, it will be either entirely fulfilled or be public on the market, waiting for an optimal deal
 
 # Console app
-Users to use a console version of the exchange\
+Users may prefer to use a console application, in order to adopt a more programmable use of the exchange\
 ***It is required to the user to be registered through the website first***
 
 Console app usage:\
@@ -52,4 +52,4 @@ from terminal: navigate inside the downloaded `Console-App` and run:
 ```
 python core.py https://d5d8-188-152-123-137.ngrok.io/
 ```
-The console app offers unique interactions with the exchange, such as the possibility to manually close own orders
+The console features a text-based interface and all the offers unique interactions with the exchange, such as the possibility to manually close own orders
