@@ -10,7 +10,7 @@ BixChange is a Bitcoin exchange API/website, built with:
 - [MongoDB -Database](https://www.mongodb.com/) 
 - [Djongo -MDB Mapper - v1.3.6](https://www.djongomapper.com/)
 - and a series of complementary libraries, a full list can be checked [here](requirements.txt)\
-\
+
 # The Exchange
 
 It allows registered users to trade Bitcoin and retrive general informations about the status of the exchange
