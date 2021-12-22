@@ -4,3 +4,4 @@ exchange\app\__pycache__
 exchange\.vs
 exchange\job\__pycache__
 *.pyc
+exchange/app/static/mistery.css
