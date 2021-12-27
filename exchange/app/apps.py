@@ -1,5 +1,4 @@
 from django.apps import AppConfig
-from .models import Bank
 
 
 class AppConfig(AppConfig):
@@ -9,6 +8,7 @@ class AppConfig(AppConfig):
     def ready(self):
         print("ready...")
         from job import schedule, updates
+        from .models import Bank
         try:
             bank = models.Bank(currency="bitcoin")
             if not bank:
