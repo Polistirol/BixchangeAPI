@@ -110,6 +110,7 @@ def console(request):
         return JsonResponse({"Failed": "Invalid request Type!"}, safe=False)
 
 
+@csrf_exempt
 def console_login(request):
     username = request.POST.get("username", None)
     password = request.POST.get("pw", None)
@@ -155,7 +156,7 @@ def api(request):
         price = Bank.objects.get(currency="bitcoin").globalMarketPrice
     except ObjectDoesNotExist:
         print("Exchange base BANK is not setup. Site is not Available at thi time. ")
-        return HttpResponse("Exchange base BANK is not setup. Site is not Available at thi time. ")
+        return HttpResponse("Exchange base BANK is not setup. Site is not Available at this time. ")
     user = request.user
     if request.method == "POST":
         action = request.POST.get("action", None)

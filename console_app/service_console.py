@@ -23,7 +23,7 @@ def ping(address=None):
     try:
         if address:
             site.url = address
-        requests.get(Site.url)
+        requests.get(site.url)
         return True
     except Exception as e:
         print(e)
@@ -31,7 +31,7 @@ def ping(address=None):
 
 
 def post(param):
-    url = Site().url
+    url = site.url
     post = site.session.post(url=url, data=param)
     return post.text
 

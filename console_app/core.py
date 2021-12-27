@@ -7,6 +7,7 @@ import sys
 
 
 def connect(address="http://127.0.0.1:8000/console"):
+
     i.msg.info("Connecting to the servr...")
     isConnected = scs.ping(address)
     if not isConnected:
@@ -158,9 +159,8 @@ def homeMenu(user, r=None):
 
 try:
     i.msg.init()
-
     if len(sys.argv) == 2:
-        connect(sys.argv[1])
+        connect(address=sys.argv[1])
     else:
         connect()
     i.welcome()
