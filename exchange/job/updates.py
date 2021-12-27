@@ -3,8 +3,6 @@ import requests
 from app.models import Bank, Profile, Order
 import datetime
 
-from exchange.app import models
-
 
 def fetchDataFromApi():
     try:
@@ -14,6 +12,8 @@ def fetchDataFromApi():
         coins = list(dataFromAPI.keys())
         newPrice = dataFromAPI[coins[0]]["usd"]
         bank = Bank.objects.get(currency="bitcoin")
+        if not bank:
+            bank = models.Bank(currency="bitcoin")
         bank.updatePrice(newPrice)
         return
     except Exception as e:
@@ -24,7 +24,7 @@ def getBankStats(currency="bitcoin"):
     bank = Bank.objects.get(currency=currency)
     if not bank:
         # create a bank
-        bank = models.Bank(currency=currency)
+        bank = makeBank(currency)
     yesterday = datetime.datetime.now(
         tz=timezone.utc) - datetime.timedelta(days=1)
     lockedBTCtot = sum(
@@ -37,3 +37,8 @@ def getBankStats(currency="bitcoin"):
     ).filter(status=2, datetime__gte=yesterday)])
     bank.updateStats(lockedBTCtot=lockedBTCtot,
                      lockedUSDtot=lockedUSDtot, volTot=volTot, vol24H=vol24H)
+
+
+def makeBank(currency):
+    bank = models.Bank(currency=currency)
+    return bank
