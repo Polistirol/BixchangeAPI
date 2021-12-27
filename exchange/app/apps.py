@@ -8,7 +8,7 @@ class AppConfig(AppConfig):
     def ready(self):
         print("ready...")
         from job import schedule, updates
-        from .models import Bank
+        from models import Bank
         try:
             bank = models.Bank(currency="bitcoin")
             if not bank:
