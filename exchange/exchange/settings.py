@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     'job',
     'app.apps.AppConfig',
     'django.contrib.admin',
-
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'

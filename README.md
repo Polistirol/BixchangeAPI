@@ -2,7 +2,7 @@
 ### Bitcoin web Exchange + console App
 
 
-Test Version LIVE @ https://d5d8-188-152-123-137.ngrok.io/
+Test Version LIVE @ https://15ae-15-160-69-245.ngrok.io/
 \
 BixChange is a Bitcoin exchange API/website, built with:
 - [Python 3.9](https://www.python.org/downloads/release/python-391/)
@@ -47,9 +47,15 @@ Users may prefer to use a console application, in order to adopt a more programm
 ***It is required to the user to be registered through the website first***
 
 Console app usage:\
-Download the folder `Console-App` from this repo\
-from terminal: navigate inside the downloaded `Console-App` and run:
+Download `BixChangeConsole.exe` inside `Console-App` from this repo\
+from terminal, locate the downloaded BixChangeConsole.exe and run
 ```
-python core.py https://d5d8-188-152-123-137.ngrok.io/
+BixChangeConsole.exe https://15ae-15-160-69-245.ngrok.io/
 ```
-The console features a text-based interface and all the offers unique interactions with the exchange, such as the possibility to manually close own orders
+The argument states the url of the web-app\ 
+If omitted, the console will connect to https://127.0.0.1:8000, the default Django address while prototyping
+
+
+The console features a text-based interface and all the offers unique interactions with the exchange, such as the possibility to manually close own orders.
+
+ 
