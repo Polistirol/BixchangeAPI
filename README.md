@@ -52,7 +52,7 @@ from terminal, locate the downloaded BixChangeConsole.exe and run
 ```
 BixChangeConsole.exe https://15ae-15-160-69-245.ngrok.io/
 ```
-The argument states the url of the web-app\ 
+The argument states the url of the web-app\
 If omitted, the console will connect to https://127.0.0.1:8000, the default Django address while prototyping
 
 
