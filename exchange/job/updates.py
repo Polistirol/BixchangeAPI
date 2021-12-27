@@ -40,5 +40,6 @@ def getBankStats(currency="bitcoin"):
 
 
 def makeBank(currency):
+    print(f"Bank is None, creating one for : {currency}")
     bank = models.Bank(currency=currency)
     return bank
