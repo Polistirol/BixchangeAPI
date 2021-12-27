@@ -12,8 +12,6 @@ def fetchDataFromApi():
         coins = list(dataFromAPI.keys())
         newPrice = dataFromAPI[coins[0]]["usd"]
         bank = Bank.objects.get(currency="bitcoin")
-        if not bank:
-            bank = models.Bank(currency="bitcoin")
         bank.updatePrice(newPrice)
         return
     except Exception as e:
@@ -22,9 +20,6 @@ def fetchDataFromApi():
 
 def getBankStats(currency="bitcoin"):
     bank = Bank.objects.get(currency=currency)
-    if not bank:
-        # create a bank
-        bank = makeBank(currency)
     yesterday = datetime.datetime.now(
         tz=timezone.utc) - datetime.timedelta(days=1)
     lockedBTCtot = sum(
@@ -37,9 +32,3 @@ def getBankStats(currency="bitcoin"):
     ).filter(status=2, datetime__gte=yesterday)])
     bank.updateStats(lockedBTCtot=lockedBTCtot,
                      lockedUSDtot=lockedUSDtot, volTot=volTot, vol24H=vol24H)
-
-
-def makeBank(currency):
-    print(f"Bank is None, creating one for : {currency}")
-    bank = models.Bank(currency=currency)
-    return bank
