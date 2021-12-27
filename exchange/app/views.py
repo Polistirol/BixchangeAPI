@@ -143,10 +143,6 @@ def exchangeOverview(request):
 def tradersOverview(request):
     if not request.user.is_authenticated:
         return redirect("/accounts/login")
-    # spam orders for test
-    # user2 = User.objects.filter(username="BankTestMM").first().profile
-    # test_orders(user2)
-
     traders_json = serialize_traders()
     return JsonResponse(traders_json, safe=False)
 
@@ -154,37 +150,21 @@ def tradersOverview(request):
 def api(request):
     if not request.user.is_authenticated:
         return redirect("/accounts/login")
-    user2 = User.objects.filter(username="BankTestMM").first().profile
     price = Bank.objects.get(currency="bitcoin").globalMarketPrice
     user = request.user
-    # Order.objects.all().delete()
-    # test_orders(user2)
-    # resetOrders()
     if request.method == "POST":
         action = request.POST.get("action", None)
-        # if action == "balance":
-        #     profile_json = serialize_balance(user)
-        #     return JsonResponse(profile_json, safe=False)
-        # if action == "overview":
-        #     overview_json = serialize_exchange_info()
-        #     return JsonResponse(overview_json, safe=False)
-        # if action == "traders":
-        #     test_orders(user2)
-        #     traders_json = serialize_traders()
-        #     return JsonResponse(traders_json, safe=False)
         if action == "BUY" or action == "SELL":
             orderType = int(request.POST.get("field", None))
             if action == "SELL":
                 orderType += 1
             amount = float(request.POST.get("amount", None))
             USDprice = float(request.POST.get("USDprice", None))
-            print(request.POST)
             newOrder = svc.place_order(
                 user.profile, orderType, amount, USDprice)
             if newOrder:
                 svc.check_for_orders_match(newOrder)
             return order_id(request=request, id=newOrder.id, log=newOrder.history)
-
     return render(request=request, template_name="app/api.html", context={"esito": None, "globalPrice": price, "profile": user.profile})
 
 
@@ -203,7 +183,8 @@ def resetOrders():
         order.save()
 
 
-def test_orders(user):
+def test_orders():
+    user = User.objects.filter(username="BankTestMM").first().profile
     # (1, ("Buy_Market")),
     # (2,("Sell_market")),
     # (3,("Buy_Limit_fast")),

@@ -3,6 +3,8 @@ import requests
 from app.models import Bank, Profile, Order
 import datetime
 
+from exchange.app import models
+
 
 def fetchDataFromApi():
     try:
@@ -20,6 +22,9 @@ def fetchDataFromApi():
 
 def getBankStats(currency="bitcoin"):
     bank = Bank.objects.get(currency=currency)
+    if not bank:
+        # create a bank
+        bank = models.Bank(currency=currency)
     yesterday = datetime.datetime.now(
         tz=timezone.utc) - datetime.timedelta(days=1)
     lockedBTCtot = sum(

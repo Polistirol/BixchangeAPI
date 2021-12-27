@@ -56,6 +56,7 @@ def serialize_orders(orders):
 def serialize_exchange_info():
     getBankStats()
     bank = Bank.objects.all().first()
+
     output = {
         "Currency": bank.currency,
         "Currency Global Price": bank.globalMarketPrice,
@@ -67,7 +68,7 @@ def serialize_exchange_info():
         "24h Volume": bank.vol24H,
         "Total Volume": bank.volTot,
         "Total Transactions": Transaction.objects.all().count(),
-        "Last Transaction": Transaction.objects.all().order_by("datetime").first().datetime,
+        "Last Transaction": Transaction.objects.all().order_by("datetime").first().datetime if Transaction.objects.all().count() else "No Transaction so far",
         "Total Orders": Order.objects.all().count(),
         "Status": {"Open": Order.objects.filter(status=1).count(),
                    "Closed": Order.objects.filter(status=2).count(),
