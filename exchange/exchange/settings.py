@@ -58,6 +58,7 @@ MIDDLEWARE = [
 
 CSRF_COOKIE_SECURE = False
 CSRF_COOKIE_HTTPONLY = False
+SESSION_COOKIE_SECURE = False
 ROOT_URLCONF = 'exchange.urls'
 
 TEMPLATES = [
@@ -86,7 +87,7 @@ DATABASES = {
     }
 }
 
-#s2iexchange2021
+# s2iexchange2021
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators

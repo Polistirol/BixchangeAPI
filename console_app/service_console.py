@@ -46,7 +46,6 @@ def login(param):
     response = json.loads(response)
     if response["logged"]:
         # user logged
-
         return param["username"], response["id"]
     else:
         return False, False
