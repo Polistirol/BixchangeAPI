@@ -1,5 +1,6 @@
 #from django.db.models.fields import Field
 from django.http.response import HttpResponse
+from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -150,7 +151,11 @@ def tradersOverview(request):
 def api(request):
     if not request.user.is_authenticated:
         return redirect("/accounts/login")
-    price = Bank.objects.get(currency="bitcoin").globalMarketPrice
+    try:
+        price = Bank.objects.get(currency="bitcoin").globalMarketPrice
+    except ObjectDoesNotExist:
+        print("Exchange base BANK is not setup. Site is not Available at thi time. ")
+        return HttpResponse("Exchange base BANK is not setup. Site is not Available at thi time. ")
     user = request.user
     if request.method == "POST":
         action = request.POST.get("action", None)
