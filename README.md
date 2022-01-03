@@ -106,7 +106,7 @@ let's create the first user
 ```
 python .\exchange\manage.py createsuperuser
 ```
-and follow the prompted instruction\ 
+and follow the prompted instruction\
 Finally run the app
 ```
 python .\exchange\manage.py runserver
