@@ -84,6 +84,32 @@ Then create a virtual eviroment using\
 python -m venv mdbenv
 ```
 And activate it\
-Windows:``` mdbenv\Scripts\activate.bat```\
-Linux/Ubuntu : ```source mdbenv/bin/activate```\
+Windows:
+``` 
+mdbenv\Scripts\activate.bat
+```\
+Linux/Ubuntu : 
+```
+source mdbenv/bin/activate
+```
+Now install all the packages needed using pip and requirements.txt\
+(from now on, the paths are written in Windows format)  
+```
+pip install -r BixchangeAPI\requirements.txt
+```
+When it's done, let's initialize the database with django
+```
+python .\exchange\manage.py makemigrations
+python .\exchange\manage.py migrate
+```
+let's create the first user
+python .\exchange\manage.py createsuperuser
+```
+and follow the prompted instruction\ 
+Finally run the app
+```
+python .\exchange\manage.py runserver
+```
+Now use your browser to go to:
+``` http://127.0.0.1:8000/ ``` and there you go !
 
