@@ -59,4 +59,11 @@ If omitted, the console will connect to https://127.0.0.1:8000, the default Djan
 
 The console features a text-based interface and all the offers unique interactions with the exchange, such as the possibility to manually close own orders.
 
- 
+ ##Deploy
+ You can follow these steps to deploy Bixchange on your machine !
+###Prerequisites
+You need same pieces of software before start, click on the links to get to the official installation page:
+-[MongoDB community Edition](https://docs.mongodb.com/manual/installation/)
+-[Python 3.9](https://www.python.org/downloads)
+-Verify taht `pip` and `virtualenv` are also installed
+###Setup local machine
