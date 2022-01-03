@@ -103,6 +103,7 @@ python .\exchange\manage.py makemigrations
 python .\exchange\manage.py migrate
 ```
 let's create the first user
+```
 python .\exchange\manage.py createsuperuser
 ```
 and follow the prompted instruction\ 
