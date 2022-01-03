@@ -2,7 +2,9 @@
 console_app\__pycache__
 console_app\executable\
 console_app\executable\build
+exchange\app\app_utils\__pycache__
 exchange\app\__pycache__
+exchange\exchange\__pycache__
 exchange\.vs
 exchange\job\__pycache__
 *.pyc

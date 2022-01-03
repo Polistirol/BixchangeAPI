@@ -1,3 +1,4 @@
+import builtins
 from django.utils import timezone
 import requests
 from app.models import Bank, Profile, Order
@@ -11,7 +12,9 @@ def fetchDataFromApi():
         dataFromAPI = requests.get(url=urlCJ).json()
         coins = list(dataFromAPI.keys())
         newPrice = dataFromAPI[coins[0]]["usd"]
-        bank = Bank.objects.get(currency="bitcoin")
+        bank, created = Bank.objects.get_or_create(currency="bitcoin")
+        if created:
+            print("A new Bank was created!")
         bank.updatePrice(newPrice)
         return
     except Exception as e:
@@ -19,7 +22,7 @@ def fetchDataFromApi():
 
 
 def getBankStats(currency="bitcoin"):
-    bank = Bank.objects.get(currency=currency)
+    bank, _ = Bank.objects.get_or_create(currency=currency)
     yesterday = datetime.datetime.now(
         tz=timezone.utc) - datetime.timedelta(days=1)
     lockedBTCtot = sum(
