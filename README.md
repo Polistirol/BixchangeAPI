@@ -65,7 +65,7 @@ The console features a text-based interface and all the offers unique interactio
 You need same pieces of software before start, click on the links to get to the official installation page:
 - [MongoDB community Edition](https://docs.mongodb.com/manual/installation/)
 - [Python](https://www.python.org/downloads)
-- Verify that `pip` and `virtualenv` are also installed
+- Verify that `pip` and `virtualenv` are also installed\
  ```pip --version```\
  ```virtualenv --version```
 
