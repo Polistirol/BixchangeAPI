@@ -87,12 +87,12 @@ And activate it\
 Windows:
 ``` 
 mdbenv\Scripts\activate.bat
-```\
+```
 Linux/Ubuntu : 
 ```
 source mdbenv/bin/activate
 ```
-Now install all the packages needed using pip and requirements.txt\
+Now install all the packages needed using pip and requirements.txt 
 (from now on, the paths are written in Windows format)  
 ```
 pip install -r BixchangeAPI\requirements.txt
