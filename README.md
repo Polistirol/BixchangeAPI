@@ -63,10 +63,21 @@ The console features a text-based interface and all the offers unique interactio
  You can follow these steps to deploy Bixchange on your machine !
 ### Prerequisites
 You need same pieces of software before start, click on the links to get to the official installation page:
--[MongoDB community Edition](https://docs.mongodb.com/manual/installation/)
--[Python 3.9](https://www.python.org/downloads)
--Verify taht `pip` and `virtualenv` are also installed
+- [MongoDB community Edition](https://docs.mongodb.com/manual/installation/)
+- [Python](https://www.python.org/downloads)
+- Verify that `pip` and `virtualenv` are also installed
+ ```pip --version
+ virtualenv --version```
+
 ### Setup local machine
--First, download or clone this repository 
-```git clone https://github.com/Polistirol/BixchangeAPI
+For semplicity, let's create a starting folder called bixchangeeDeploy, anywhere in your system
+```mkdir bixchangeeDeploy```
+then let's get into it and download or clone this repository inside
+```cd bixchangeeDeploy
+git clone https://github.com/Polistirol/BixchangeAPI.git```
+Then create a virtual eviroment using
+```python -m venv mdbenv```
+And activate it
+Windows:``` mdbenv\Scripts\activate.bat```
+Linux/Ubuntu : ```source mdbenv/bin/activate```
 
