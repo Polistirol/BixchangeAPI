@@ -66,7 +66,7 @@ You need same pieces of software before start, click on the links to get to the 
 - [MongoDB community Edition](https://docs.mongodb.com/manual/installation/)
 - [Python](https://www.python.org/downloads)
 - Verify that `pip` and `virtualenv` are also installed
- ```pip --version```
+ ```pip --version```\
  ```virtualenv --version```
 
 ### Setup local machine
