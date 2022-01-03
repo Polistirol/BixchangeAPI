@@ -70,14 +70,14 @@ You need same pieces of software before start, click on the links to get to the 
  ```virtualenv --version```
 
 ### Setup local machine
-For semplicity, let's create a starting folder called bixchangeeDeploy, anywhere in your system
-```mkdir bixchangeeDeploy```
-then let's get into it and download or clone this repository inside
-```cd bixchangeeDeploy```
-```git clone https://github.com/Polistirol/BixchangeAPI.git```
-Then create a virtual eviroment using
-```python -m venv mdbenv```
-And activate it
-Windows:``` mdbenv\Scripts\activate.bat```
-Linux/Ubuntu : ```source mdbenv/bin/activate```
+For semplicity, let's create a starting folder called bixchangeeDeploy, anywhere in your system\
+```mkdir bixchangeeDeploy```\
+then let's get into it and download or clone this repository inside\
+```cd bixchangeeDeploy```\
+```git clone https://github.com/Polistirol/BixchangeAPI.git```\
+Then create a virtual eviroment using\
+```python -m venv mdbenv```\
+And activate it\
+Windows:``` mdbenv\Scripts\activate.bat```\
+Linux/Ubuntu : ```source mdbenv/bin/activate```\
 
