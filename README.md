@@ -2,7 +2,7 @@
 ### Bitcoin web Exchange + console App
 
 
-Test Version LIVE @ https://bixchangeapi.loca.lt/
+Version LIVE @ https://bixchangeapi.loca.lt/
 \
 BixChange is a Bitcoin exchange API/website, built with:
 - [Python 3.9](https://www.python.org/downloads/release/python-391/)
