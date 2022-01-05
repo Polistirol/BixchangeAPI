@@ -56,7 +56,7 @@ python BixChangeConsole.py https://bixchangeapi.loca.lt/
 ```
 The argument states the url of the web-app\
 If omitted, the console will connect to https://127.0.0.1:8000, the default Django address while prototyping\
-It can be used when locally deployed\
+It can be used when locally deployed
 
 
 The console features a text-based interface and all the offers unique interactions with the exchange, such as the possibility to manually close own orders.
