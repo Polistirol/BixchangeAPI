@@ -44,17 +44,19 @@ A Limit FULL order will **never be splitted**, it will be either entirely fulfil
 
 # Console app
 Users may prefer to use a console application, in order to adopt a more programmable use of the exchange\
-***It is required to the user to be registered through the website first***
+***It is required to the user to be registered through the website first***\
+***Python is also required, see below for installation instructions***
 
 Console app usage:\
-Download `BixChangeConsole.exe` inside `Console-App` from this repo\
-from terminal, locate the downloaded BixChangeConsole.exe and run
+Download the `Console-App` folder from this repo\
+from terminal, locate and enter the downloaded folder and run
 
 ```
-BixChangeConsole.exe https://bixchangeapi.loca.lt/
+python BixChangeConsole.py https://bixchangeapi.loca.lt/
 ```
 The argument states the url of the web-app\
-If omitted, the console will connect to https://127.0.0.1:8000, the default Django address while prototyping
+If omitted, the console will connect to https://127.0.0.1:8000, the default Django address while prototyping\
+It can be used when locally deployed\
 
 
 The console features a text-based interface and all the offers unique interactions with the exchange, such as the possibility to manually close own orders.
