@@ -9,3 +9,4 @@ exchange\.vs
 exchange\job\__pycache__
 *.pyc
 exchange/app/static/mistery.css
+console_app/BixChangeConsole.exe
