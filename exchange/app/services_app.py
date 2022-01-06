@@ -361,7 +361,7 @@ def new_transaction_referral(sender, receiver, amount):  # if referral
     USDprice = 0
     sender.btc += amount
     receiver.btc += amount
-    bank = models.Bank.objects.filter(id=1).first()
+    bank = models.Bank.objects.get(currency="bitcoin")
     bank.treasure -= amount*2
     bank.save()
     receiver.save()
